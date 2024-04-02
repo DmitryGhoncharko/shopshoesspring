@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payed User Products</title>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/client/products">Посмотреть продукты</a></li>
+            <li><a href="/client/bucket">Корзина</a></li>
+            <li><a href="/admin/payed">Оплаченные продукты</a></li>
+            <li><a href="/client/bucket">Добавить продукт</a></li>
+            <li><a href="/admin/products">Обновить продукт</a></li>
+            <li><a href="/logout">Выйти</a></li>
+        </ul>
+    </nav>
+</header>
+<h1>Payed User Products</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Айди</th>
+        <th>Логин пользователя</th>
+        <th>Название продукта</th>
+        <th>Колличество</th>
+        <th>Цена</th>
+        <th>Дата оплаты</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="payedProduct : ${payed}">
+        <td th:text="${payedProduct.id}"></td>
+        <td th:text="${payedProduct.userProduct.user.userLogin}"></td>
+        <td th:text="${payedProduct.userProduct.product.productName}"></td>
+        <td th:text="${payedProduct.userProduct.productCount}"></td>
+        <td th:text="${payedProduct.userProduct.productFinalPrice}"></td>
+        <td th:text="${payedProduct.payedDate}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
