@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Обновить светильник</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .gallery img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>Каталог светильников</h1>
+    <nav class="nav justify-content-center">
+      <a class="nav-link" href="/admin/addType">Добавить тип светильника</a>
+      <a class="nav-link" href="/admin/typeList">Cписок типов светильников</a>
+      <a class="nav-link" href="/admin/addLight">Добавить светильник</a>
+      <a class="nav-link" href="/admin/lightList">Список  светильников</a>
+      <a class="nav-link" href="/admin/show">Посмотреть заявки</a>
+      <a class="nav-link" href="/logout">Выйти</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h2 class="text-center mb-4">Обновить светильник</h2>
+      <form action="/admin/updateLight" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="${light.id}" />
+        <div class="form-group">
+          <label for="lightName">Название светильника</label>
+          <input type="text" class="form-control" id="lightName" name="lightName" th:value="${light.lightName}" placeholder="Введите название светильника">
+        </div>
+        <div class="form-group">
+          <label for="lightPower">Мощность</label>
+          <input type="text" class="form-control" id="lightPower" name="lightPower" th:value="${light.lightPower}" placeholder="Введите мощность светильника">
+        </div>
+        <div class="form-group">
+          <label for="lightSupplyVoltage">Напряжение</label>
+          <input type="text" class="form-control" id="lightSupplyVoltage" name="lightSupplyVoltage" th:value="${light.lightSupplyVoltage}" placeholder="Введите напряжение светильника">
+        </div>
+        <div class="form-group">
+          <label for="lightColorTemperature">Цветовая температура</label>
+          <input type="text" class="form-control" id="lightColorTemperature" name="lightColorTemperature" th:value="${light.lightColorTemperature}" placeholder="Введите цветовую температуру светильника">
+        </div>
+        <div class="form-group">
+          <label for="lightDegreeOfProtection">Степень защиты</label>
+          <input type="text" class="form-control" id="lightDegreeOfProtection" name="lightDegreeOfProtection" th:value="${light.lightDegreeOfProtection}" placeholder="Введите степень защиты светильника">
+        </div>
+        <div class="form-group">
+          <label for="lightTemperatureRegime">Температурный режим</label>
+          <input type="text" class="form-control" id="lightTemperatureRegime" name="lightTemperatureRegime" th:value="${light.lightTemperatureRegime}" placeholder="Введите температурный режим светильника">
+        </div>
+        <div class="form-group">
+          <label for="lightOveralDimenssions">Размеры</label>
+          <input type="text" class="form-control" id="lightOveralDimenssions" name="lightOveralDimenssions" th:value="${light.lightOveralDimenssions}" placeholder="Введите размеры светильника">
+        </div>
+        <div class="form-group">
+          <label for="lightMass">Масса</label>
+          <input type="text" class="form-control" id="lightMass" name="lightMass" th:value="${light.lightMass}" placeholder="Введите массу светильника">
+        </div>
+        <div class="form-group">
+          <label for="lightCorpusMaterial">Материал корпуса</label>
+          <input type="text" class="form-control" id="lightCorpusMaterial" name="lightCorpusMaterial" th:value="${light.lightCorpusMaterial}" placeholder="Введите материал корпуса светильника">
+        </div>
+        <div class="form-group">
+          <label for="lightImage">Изображение</label>
+          <input type="file" class="form-control-file" id="lightImage" name="lightImage">
+        </div>
+        <label for="lightType">Тип светильника</label>
+        <select class="form-control" id="lightType" name="lightType">
+          <option th:each="type : ${lightTypes}"
+                  th:value="${type.id}"
+                  th:text="${type.lightTypeName}"
+                  th:selected="${type.id == light.lightType.id}"></option>
+        </select>
+        <br><br>
+        <button type="submit" class="btn btn-primary btn-block">Обновить</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

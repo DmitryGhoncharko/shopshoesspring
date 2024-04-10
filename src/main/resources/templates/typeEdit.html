@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Редактирование типа светильника</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>Каталог светильников</h1>
+    <nav class="nav justify-content-center">
+      <a class="nav-link" href="/admin/addType">Добавить тип светильника</a>
+      <a class="nav-link" href="/admin/typeList">Список типов светильников</a>
+      <a class="nav-link" href="/admin/addLight">Добавить светильник</a>
+      <a class="nav-link" href="/admin/lightList">Список светильников</a>
+      <a class="nav-link" href="/admin/show">Посмотреть заявки</a>
+      <a class="nav-link" href="/logout">Выйти</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container mt-4">
+  <h2>Редактирование типа светильника</h2>
+  <form action="/admin/editType" method="post">
+    <input type="hidden" th:field="${lightType.id}"/>
+    <div class="form-group">
+      <label for="lightTypeName">Название типа</label>
+      <input type="text" th:field="${lightType.lightTypeName}" class="form-control" id="lightTypeName" placeholder="Введите название типа">
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

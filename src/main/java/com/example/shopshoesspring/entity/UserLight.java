@@ -4,36 +4,41 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.sql.Date;
 import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "_user_product")
+@Table(name = "user_light")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserProduct {
+@ToString
+public class UserLight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_product_id", nullable = false)
+    @Column(name = "user_light_id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "light_id", nullable = false)
+    private Light light;
 
-    @Column(name = "product_count", nullable = false)
-    private Long productCount;
+    @Column(name = "user_light_completed", nullable = false)
+    private Boolean userLightCompleted = false;
 
-    @Column(name = "product_final_price", nullable = false)
-    private Double productFinalPrice;
-    @Column(name = "payed", nullable = false)
-    private Boolean payed;
+    @Column(name = "phone", nullable = false, length = 500)
+    private String phone;
+
+    @Column(name = "message", nullable = false, length = 500)
+    private String message;
+    @Column(name = "_date",nullable = false)
+    private Date date;
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
@@ -41,20 +46,12 @@ public class UserProduct {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        UserProduct that = (UserProduct) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
+        UserLight userLight = (UserLight) o;
+        return getId() != null && Objects.equals(getId(), userLight.getId());
     }
 
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "productCount = " + productCount + ", " +
-                "productFinalPrice = " + productFinalPrice + ")";
     }
 }

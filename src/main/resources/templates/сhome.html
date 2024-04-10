@@ -3,20 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная</title>
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .gallery img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 <header>
-    <nav>
-        <ul>
-            <li><a href="/client/products">Посмотреть продукты</a></li>
-            <li><a href="/client/bucket">Корзина</a></li>
-            <li><a href="/logout">Выйти</a></li>
-        </ul>
-    </nav>
+    <div class="container">
+        <h1>Каталог светильников</h1>
+        <nav class="nav justify-content-center">
+            <a class="nav-link" href="/client/catalog">Каталог</a>
+            <a class="nav-link" href="/client/about">О компании</a>
+            <a class="nav-link" href="/client/contacts">Контакты</a>
+            <a class="nav-link" href="/logout">Выйти</a>
+        </nav>
+    </div>
 </header>
-<main>
-    <p>Добро пожаловать!</p>
-</main>
+
+<div class="container">
+    <h2 class="text-center mt-5 mb-3">Новые поступления</h2>
+    <div class="row gallery">
+        <div class="col-md-4">
+            <img src="https://via.placeholder.com/300" alt="Светильник 1">
+        </div>
+        <div class="col-md-4">
+            <img src="https://via.placeholder.com/300" alt="Светильник 2">
+        </div>
+        <div class="col-md-4">
+            <img src="https://via.placeholder.com/300" alt="Светильник 3">
+        </div>
+    </div>
+</div>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

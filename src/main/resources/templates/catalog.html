@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categories</title>
+  <!-- Подключение Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Дополнительные стили */
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .gallery img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>Каталог светильников</h1>
+    <nav class="nav justify-content-center">
+      <a class="nav-link" href="/client/catalog">Каталог</a>
+      <a class="nav-link" href="/client/about">О компании</a>
+      <a class="nav-link" href="/client/contacts">Контакты</a>
+      <a class="nav-link" href="/logout">Выйти</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <h1 class="text-center mb-4">Список категорий</h1>
+  <ul class="list-group">
+    <li th:each="category : ${categories}" class="list-group-item">
+      <a th:href="@{/client/category/{id}(id=${category.id})}" th:text="${category.lightTypeName}"></a>
+    </li>
+  </ul>
+</div>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

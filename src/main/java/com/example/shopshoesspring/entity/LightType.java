@@ -4,29 +4,24 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.sql.Date;
-import java.time.Instant;
 import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "payed_user_product")
+@Table(name = "light_type")
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Builder
-public class PayedUserProduct {
+public class LightType {
     @Id
+    @Column(name = "light_type_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "payed_user_product_id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_product_id", nullable = false)
-    private UserProduct userProduct;
-
-    @Column(name = "payed_date", nullable = false)
-    private Date payedDate;
+    @Column(name = "light_type_name", nullable = false, length = 500, unique = true)
+    private String lightTypeName;
 
     @Override
     public final boolean equals(Object o) {
@@ -35,19 +30,12 @@ public class PayedUserProduct {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        PayedUserProduct that = (PayedUserProduct) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
+        LightType lightType = (LightType) o;
+        return getId() != null && Objects.equals(getId(), lightType.getId());
     }
 
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "payedDate = " + payedDate + ")";
     }
 }

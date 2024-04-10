@@ -1,23 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Главная страница</title>
+  <title>Добавить тип светильника</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
-
     header {
       background-color: #333;
       color: #fff;
       padding: 20px 0;
       text-align: center;
-    }
-
-    .gallery img {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -37,18 +30,14 @@
 </header>
 
 <div class="container">
-  <h2 class="text-center mt-5 mb-3">Новые поступления</h2>
-  <div class="row gallery">
-    <div class="col-md-4">
-      <img src="https://via.placeholder.com/300" alt="Светильник 1">
+  <h2 class="text-center mt-4 mb-4">Добавить тип светильника</h2>
+  <form action="/admin/addType" method="post">
+    <div class="form-group">
+      <label for="lightTypeName">Название типа светильника</label>
+      <input type="text" class="form-control" id="lightTypeName" name="lightTypeName" placeholder="Введите название" required>
     </div>
-    <div class="col-md-4">
-      <img src="https://via.placeholder.com/300" alt="Светильник 2">
-    </div>
-    <div class="col-md-4">
-      <img src="https://via.placeholder.com/300" alt="Светильник 3">
-    </div>
-  </div>
+    <button type="submit" class="btn btn-primary">Добавить</button>
+  </form>
 </div>
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Посмотреть заявки</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Каталог светильников</h1>
+        <nav class="nav justify-content-center">
+            <a class="nav-link" href="/admin/addType">Добавить тип светильника</a>
+            <a class="nav-link" href="/admin/typeList">Cписок типов светильников</a>
+            <a class="nav-link" href="/admin/addLight">Добавить светильник</a>
+            <a class="nav-link" href="/admin/lightList">Список  светильников</a>
+            <a class="nav-link" href="/admin/show">Посмотреть заявки</a>
+            <a class="nav-link" href="/logout">Выйти</a>
+        </nav>
+    </div>
+</header>
+
+<div class="container mt-4">
+    <h2>Заявки на светильники</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Пользователь</th>
+            <th scope="col">Светильник</th>
+            <th scope="col">Номер телефона</th>
+            <th scope="col">Сообщение</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Статус</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="userLight, iterStat : ${userLights}">
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${userLight.user.userLogin}"></td>
+            <td th:text="${userLight.light.lightName}"></td>
+            <td th:text="${userLight.phone}"></td>
+            <td th:text="${userLight.message}"></td>
+            <td th:text="${userLight.date}"></td>
+            <td>
+                <input type="checkbox" th:checked="${userLight.userLightCompleted}" onchange="changeStatus(this, ${userLight.id})">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function changeStatus(checkbox, userLightId) {
+        var isChecked = checkbox.checked;
+        var formData = new FormData();
+        formData.append('userLightId', userLightId);
+        formData.append('completed', isChecked);
+
+        fetch('/admin/updateStatus', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log('Status updated successfully:', data);
+            })
+            .catch(error => {
+                console.error('There was a problem updating the status:', error);
+                checkbox.checked = !isChecked; // Revert checkbox state if update fails
+            });
+    }
+</script>
+</body>
+</html>

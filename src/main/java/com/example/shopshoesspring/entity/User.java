@@ -28,7 +28,7 @@ public class User {
     @Column(name = "user_balance", nullable = false)
     private Double userBalance;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_role_id", nullable = false)
     private UserRole userRole;
 

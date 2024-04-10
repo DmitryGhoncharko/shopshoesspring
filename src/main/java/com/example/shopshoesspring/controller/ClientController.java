@@ -1,18 +1,22 @@
 package com.example.shopshoesspring.controller;
 
+import com.example.shopshoesspring.entity.Light;
+import com.example.shopshoesspring.entity.LightType;
 import com.example.shopshoesspring.entity.User;
-import com.example.shopshoesspring.entity.UserProduct;
-import com.example.shopshoesspring.service.ProductService;
+import com.example.shopshoesspring.entity.UserLight;
+import com.example.shopshoesspring.repository.LightRepository;
+import com.example.shopshoesspring.repository.LightTypeRepository;
+import com.example.shopshoesspring.repository.UserLightRepository;
 import com.example.shopshoesspring.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,43 +24,75 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/client")
 public class ClientController {
-    private final ProductService productService;
+
     private final UserService userService;
+    private final LightRepository lightRepository;
+    private final LightTypeRepository lightTypeRepository;
+    private final UserLightRepository userLightRepository;
+
     @GetMapping("/home")
-    public String homePage(){
+    public String homePage() {
         return "сhome";
     }
-    @GetMapping("/products")
-    public String getAllProducts(Model model){
-        model.addAttribute("products",productService.findAllProducts());
-        return "product";
-    }
-    @PostMapping("/addToBucket")
-    public String addToBucket(@RequestParam("quantity") Long count, @RequestParam("productId") Long productId, Principal principal){
-        productService.addToBucket(productId,count,principal);
-        return "redirect:/client/products";
+
+    @GetMapping("/catalog")
+    public String catalogPage(Model model) {
+        List<LightType> lightTypes = lightTypeRepository.findAll();
+        model.addAttribute("categories", lightTypes);
+
+        return "catalog";
     }
 
-    @PostMapping("/deleteFromBucket")
-    public String deleteFromBucket(@RequestParam("userProductId") Long userProductId){
-        productService.deleteUserProductById(userProductId);
-        return "redirect:/client/bucket";
+    @GetMapping("/category/{id}")
+    public String showCategoryDetails(@PathVariable("id") Long id, Model model) {
+        LightType category = lightTypeRepository.findById(id).orElse(null);
+        if (category == null) {
+            return "redirect:/client/catalog";
+        }
+        List<Light> lights = lightRepository.findByLightTypeId(category.getId());
+        model.addAttribute("lights", lights);
+        return "lights";
     }
 
-    @PostMapping("/pay")
-    public String pay(@RequestParam("userProductId") Long userProductId){
-        productService.pay(userProductId);
-        return "redirect:/client/bucket";
+    @GetMapping("/light/{id}")
+    public String showLightDetails(@PathVariable("id") Long id, Model model) {
+        Light light = lightRepository.findById(id).orElse(null);
+        if (light == null) {
+            return "redirect:/client/catalog";
+        }
+        model.addAttribute("light", light);
+        return "light_details";
     }
 
+    @PostMapping("/add")
+    public String addOrder(HttpServletRequest request, Principal principal) {
+        String mobileNumber = request.getParameter("mobileNumber");
+        String message = request.getParameter("message");
+        Long lightId = Long.valueOf(request.getParameter("lightId"));
+        String login = principal.getName();
+        Optional<User> userOptional = userService.findUserByUserLogin(login);
+        Optional<Light> lightOptional = lightRepository.findById(lightId);
+        if (userOptional.isEmpty() || lightOptional.isEmpty()) {
+            return "redirect:/client/er";
+        }
+        UserLight userLight = UserLight.builder()
+                .userLightCompleted(false)
+                .user(userOptional.get())
+                .light(lightOptional.get())
+                .phone(mobileNumber)
+                .message(message)
+                .date(new Date(new java.util.Date().getTime()))
+                .build();
+        userLightRepository.save(userLight);
 
-    @GetMapping("/bucket")
-    public String bucketPage(Model model, Principal principal){
-       List<UserProduct> userProductList = productService.getUserProductsByUserId(principal);
-        Optional<User> userOptional = userService.findUserByUserLogin(principal.getName());
-        model.addAttribute("balance",userOptional.get().getUserBalance());
-        model.addAttribute("userProduct",userProductList);
-       return "bucket";
+        return "redirect:/client/sc";
     }
-
+    @GetMapping("/sc")
+    public String successPage(){
+        return "sc";
+    }
+    @GetMapping("er")
+    public String errorPage(){
+        return "er";
+    }
 }
