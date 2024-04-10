@@ -40,7 +40,7 @@
     <div class="col-md-6 offset-md-3">
       <h2 class="text-center mb-4">Обновить светильник</h2>
       <form action="/admin/updateLight" method="post" enctype="multipart/form-data">
-        <input type="hidden" th:field="${light.id}" />
+        <input type="hidden" id="lightId" name="lightId" th:value="${light.id}" />
         <div class="form-group">
           <label for="lightName">Название светильника</label>
           <input type="text" class="form-control" id="lightName" name="lightName" th:value="${light.lightName}" placeholder="Введите название светильника">

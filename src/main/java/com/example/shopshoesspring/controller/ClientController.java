@@ -95,4 +95,13 @@ public class ClientController {
     public String errorPage(){
         return "er";
     }
+
+    @GetMapping("/about")
+    public String aboutPage(){
+        return "about";
+    }
+    @GetMapping("/contacts")
+    public String contactsPage(){
+        return "contacts";
+    }
 }

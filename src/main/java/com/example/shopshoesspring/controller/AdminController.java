@@ -153,7 +153,6 @@ public class AdminController {
         return "redirect:/admin/addLight";
     }
 
-    // Метод для преобразования MultipartFile в файл с уникальным именем
     private File convert(MultipartFile file, String fileName) throws IOException {
         File convFile = new File(fileName);
         convFile.createNewFile();
@@ -197,32 +196,76 @@ public class AdminController {
         return "editLight";
     }
     @PostMapping("/updateLight")
-    public String updateLight(@ModelAttribute Light light, @RequestParam("lightType") Long lightTypeId) {
+    public String updateLight(@RequestParam("lightName") String lightName,
+                              @RequestParam("lightPower") String lightPower,
+                              @RequestParam("lightSupplyVoltage") String lightSupplyVoltage,
+                              @RequestParam("lightColorTemperature") String lightColorTemperature,
+                              @RequestParam("lightDegreeOfProtection") String lightDegreeOfProtection,
+                              @RequestParam("lightTemperatureRegime") String lightTemperatureRegime,
+                              @RequestParam("lightOveralDimenssions") String lightOveralDimenssions,
+                              @RequestParam("lightMass") String lightMass,
+                              @RequestParam("lightCorpusMaterial") String lightCorpusMaterial,
+                              @RequestParam("lightImage") MultipartFile imageFile,
+                              @RequestParam("lightType") Long lightTypeId,
+                              @RequestParam("lightId") Long lightId) throws IOException {
         Optional<LightType> lightTypeOptional = lightTypeRepository.findById(lightTypeId);
-        if(lightTypeOptional.isEmpty()){
-            return "redirect:/admin/lightList";
+        Optional<Light> lightOptional = lightRepository.findById(lightId);
+        if(lightTypeOptional.isEmpty() || lightOptional.isEmpty()){
+            return "redirect:/admin/addLight";
         }
+        Light light = lightOptional.get();
+        light.setLightName(lightName);
+        light.setLightPower(lightPower);
+        light.setLightSupplyVoltage(lightSupplyVoltage);
+        light.setLightColorTemperature(lightColorTemperature);
+        light.setLightDegreeOfProtection(lightDegreeOfProtection);
+        light.setLightTemperatureRegime(lightTemperatureRegime);
+        light.setLightOveralDimenssions(lightOveralDimenssions);
+        light.setLightMass(lightMass);
+        light.setLightCorpusMaterial(lightCorpusMaterial);
         light.setLightType(lightTypeOptional.get());
-        lightRepository.save(light);
+
+       if(imageFile!=null && !imageFile.isEmpty()){
+           RestTemplate restTemplate = new RestTemplate();
+           String serverUrl = "http://217.18.62.76:8081/upload";
+
+           String originalFileName = imageFile.getOriginalFilename();
+           String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+           String fileName = UUID.randomUUID().toString() + fileExtension;
+
+           FileSystemResource resource = new FileSystemResource(convert(imageFile, fileName));
+
+           MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
+           bodyMap.add("file", resource);
+
+           HttpHeaders headers = new HttpHeaders();
+           headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+           HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
+
+           ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity, String.class);
+
+           if (response.getStatusCode() == HttpStatus.OK) {
+               String imageUrl = "http://217.18.62.76:8000/uploads/" + fileName;
+               light.setLightImageLink(imageUrl);
+               lightRepository.save(light);
+           }
+       }else {
+           lightRepository.save(light);
+       }
+
         return "redirect:/admin/lightList";
     }
+
     @GetMapping("/show")
     public String infoPage(Model model){
-        List<UserLight> userLights = userLightRepository.findAll();
+        List<UserLight> userLights = userLightRepository.findByUserLightCompletedFalse();
         model.addAttribute("userLights",userLights);
         return "info";
     }
-    @PostMapping("/updateStatus")
-    @ResponseBody
-    public String updateStatus(@RequestParam("userLightId") Long userLightId, @RequestParam("completed") boolean completed) {
-        UserLight userLight = userLightRepository.findById(userLightId).orElse(null);
-        if (userLight == null) {
-            return "User light not found";
-        }
-
-        userLight.setUserLightCompleted(completed);
-        userLightRepository.save(userLight);
-
-        return "Status updated successfully";
+    @GetMapping("/сhangeStatus/{id}")
+    public String updateStatus(@PathVariable Long id) {
+        userLightRepository.deleteById(id);
+        return "redirect:/admin/show";
     }
 }

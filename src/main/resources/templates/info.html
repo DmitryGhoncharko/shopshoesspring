@@ -52,7 +52,7 @@
             <td th:text="${userLight.message}"></td>
             <td th:text="${userLight.date}"></td>
             <td>
-                <input type="checkbox" th:checked="${userLight.userLightCompleted}" onchange="changeStatus(this, ${userLight.id})">
+                <a th:href="@{'/admin/сhangeStatus/' + ${userLight.id}}" class="btn btn-danger btn-sm">Удалить</a>
             </td>
         </tr>
         </tbody>
@@ -63,13 +63,16 @@
 <script>
     function changeStatus(checkbox, userLightId) {
         var isChecked = checkbox.checked;
-        var formData = new FormData();
-        formData.append('userLightId', userLightId);
-        formData.append('completed', isChecked);
+        var params = new URLSearchParams();
+        params.append('userLightId', userLightId);
+        params.append('completed', isChecked);
 
         fetch('/admin/updateStatus', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params
         })
             .then(response => {
                 if (!response.ok) {
@@ -85,6 +88,7 @@
                 checkbox.checked = !isChecked; // Revert checkbox state if update fails
             });
     }
+
 </script>
 </body>
 </html>
